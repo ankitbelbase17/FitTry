@@ -4,14 +4,22 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ShopContextProvider from './Context/ShopContext';
+import TryOnContextProvider from './Context/TryOnContextProvider';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   
   <React.StrictMode>
+   
     <ShopContextProvider>
+      <TryOnContextProvider>
       <App />
+      </TryOnContextProvider>
     </ShopContextProvider>
+      
+  
+  
   </React.StrictMode>
 );
 
