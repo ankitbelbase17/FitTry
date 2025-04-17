@@ -1,44 +1,61 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "../ProductDisplay/ProductDisplay.css";
 import { ShopContext } from "../../Context/ShopContext";
 import { TryOnContext } from "../../Context/TryOnContextProvider";
+import TryOnPopup from "../TryOnPopup/TryOnPopup";
 import star_icon from "../Assets/star_icon.png";
 import star_dull_icon from "../Assets/star_dull_icon.png";
 
 const ProductDisplay = (props) => {
   const { product } = props;
   const { addToCart } = useContext(ShopContext);
-  const { tryOnImages, isTryOnActive, toggleTryOn } = useContext(TryOnContext);
+  const { tryOnImages, isTryOnActive, userImage, uploadUserImages } = useContext(TryOnContext);
+  const [showPopup, setShowPopup] = useState(false);
 
   return (
     <div className="productdisplay">
       <div className="productdisplay-left">
         <div className="productdisplay-img-list">
-          <img src={product.image} alt="" />
-          <img src={product.image} alt="" />
-          <img src={product.image} alt="" />
-          <img src={product.image} alt="" />
+          {isTryOnActive ? (
+            userImage ? (
+              <img src={userImage} alt="User Try-On" />
+            ) : (
+              tryOnImages.map((img, index) => <img key={index} src={img} alt={`try-on-${index}`} />)
+            )
+          ) : (
+            <>
+              <img src={product.image} alt="" />
+              <img src={product.image} alt="" />
+              <img src={product.image} alt="" />
+              <img src={product.image} alt="" />
+            </>
+          )}
         </div>
         <div className="productdisplay-img">
-          <img className="productdisplay-main-img" src={product.image} alt="" />
+          {isTryOnActive ? (
+            userImage ? (
+              <img className="productdisplay-main-img" src={userImage} alt="User Try-On" />
+            ) : (
+              tryOnImages.length > 0 ? (
+                <img className="productdisplay-main-img" src={tryOnImages[0]} alt="Try On" />
+              ) : (
+                <img className="productdisplay-main-img" src={product.image} alt="" />
+              )
+            )
+          ) : (
+            <img className="productdisplay-main-img" src={product.image} alt="" />
+          )}
         </div>
       </div>
       <div className="productdisplay-right">
         <h1>{product.name}</h1>
         <div className="productdisplay-right-stars">
-          {isTryOnActive ? (
-            tryOnImages.map((img, index) => (
-              <img key={index} src={img} alt={`try-on-${index}`} />
-            ))
-          ) : (
-            <>
-              <img src={star_icon} alt="star" />
-              <img src={star_icon} alt="star" />
-              <img src={star_icon} alt="star" />
-              <img src={star_icon} alt="star" />
-              <img src={star_dull_icon} alt="star" />
-            </>
-          )}
+          {/* Star icons remain unchanged */}
+          <img src={star_icon} alt="star" />
+          <img src={star_icon} alt="star" />
+          <img src={star_icon} alt="star" />
+          <img src={star_icon} alt="star" />
+          <img src={star_dull_icon} alt="star" />
           <p>(100)</p>
         </div>
         <div className="productdisplay-right-prices">
@@ -59,9 +76,10 @@ const ProductDisplay = (props) => {
           </div>
         </div>
         <button onClick={() => addToCart(product.id)}>ADD TO CART</button>
-        <button onClick={toggleTryOn} className="tryon-button">
+        <button onClick={() => setShowPopup(true)} className="tryon-button">
           TRY ON
         </button>
+        {showPopup && <TryOnPopup onClose={() => setShowPopup(false)} onUpload={uploadUserImages} />}
         <p className="productdisplay-right-category">
           <span>Category : </span>Women, T-Shirt, Crop Top
         </p>
