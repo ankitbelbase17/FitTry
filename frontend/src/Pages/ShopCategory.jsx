@@ -12,6 +12,7 @@ const ShopCategory = (props) => {
 
   // When an item is clicked, update the clothImage state in TryOnContext.
   const handleItemClick = async (item) => {
+    
     try {
       // resetTryOn();
       // Fetch the image as a Blob

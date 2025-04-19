@@ -16,6 +16,13 @@ const TryOnContextProvider = (props) => {
   //   setIsTryOnActive(false);
   //   setTryOnImages([]);
   // };
+  const resetTryOn = () => {
+    setTryOnImages([]);
+    setUserImages([]);
+    setClothImage(null);
+    setIsTryOnActive(false);
+  };
+  
   
   const toggleTryOn = async () => {
     if (triggerLockRef.current) {
@@ -43,7 +50,7 @@ const TryOnContextProvider = (props) => {
       });
   
       const response = await axios.post(
-        "https://c9fa-3-81-63-180.ngrok-free.app/generate",
+        "https://7b50-35-225-9-126.ngrok-free.app/generate",
         {
           person_urls: userImages,
           cloth_url: clothImage,
@@ -107,7 +114,7 @@ const TryOnContextProvider = (props) => {
         uploadUserImages,
         clothImage,
         uploadClothImage,
-        // resetTryOn,
+        resetTryOn,
       }}
     >
       {props.children}
