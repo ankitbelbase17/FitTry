@@ -1,37 +1,38 @@
-import React, { useContext } from 'react';
-import './Css/ShopCategory.css';
-import { ShopContext } from '../Context/ShopContext';
-import { TryOnContext } from '../Context/TryOnContextProvider';
-import dropdown_icon from '../Components/Assets/dropdown_icon.png';
-import Items from '../Components/Items/Items';
+import React, { useContext } from "react";
+import "./Css/ShopCategory.css";
+import { ShopContext } from "../Context/ShopContext";
+import { TryOnContext } from "../Context/TryOnContextProvider";
+import dropdown_icon from "../Components/Assets/dropdown_icon.png";
+import Items from "../Components/Items/Items";
 import axios from "axios";
 
 const ShopCategory = (props) => {
   const { all_product } = useContext(ShopContext);
-  const { uploadClothImage } = useContext(TryOnContext);
+  const { uploadClothImage , resetTryOn } = useContext(TryOnContext);
 
   // When an item is clicked, update the clothImage state in TryOnContext.
   const handleItemClick = async (item) => {
     try {
+      // resetTryOn();
       // Fetch the image as a Blob
       const response = await fetch(item.image);
       const blob = await response.blob();
-  
+
       // Convert Blob to a File object
       const file = new File([blob], "upload.png", { type: blob.type });
-  
+
       // Prepare FormData for Cloudinary upload
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "Ankit_tryon"); // Replace with your Cloudinary upload preset
-      formData.append("cloud_name", "dov3gyfcz"); // Replace with your Cloudinary cloud name
-  
+      formData.append("cloud_name", "dxolqndhb"); // Replace with your Cloudinary cloud name
+
       // Upload the file to Cloudinary
       const cloudinaryResponse = await axios.post(
-        "https://api.cloudinary.com/v1_1/dov3gyfcz/image/upload",
+        "https://api.cloudinary.com/v1_1/dxolqndhb/image/upload",
         formData
       );
-  
+
       // If upload is successful, pass the Cloudinary URL to uploadClothImage
       if (cloudinaryResponse.data.secure_url) {
         console.log(cloudinaryResponse.data.secure_url);
@@ -43,9 +44,9 @@ const ShopCategory = (props) => {
       console.error("Error uploading image to Cloudinary:", error);
     }
   };
-  
+
   return (
-    <div className="shop-category"> 
+    <div className="shop-category">
       <img className="shopcategory-banner" src={props.banner} alt="" />
       <div className="shopcategory-indexSort">
         <p>
@@ -76,9 +77,7 @@ const ShopCategory = (props) => {
         })}
       </div>
 
-      <div className="shopcategory-loadmore">
-        Explore More
-      </div>
+      <div className="shopcategory-loadmore">Explore More</div>
     </div>
   );
 };

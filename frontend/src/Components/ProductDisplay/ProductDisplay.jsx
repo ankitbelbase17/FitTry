@@ -5,22 +5,65 @@ import { TryOnContext } from "../../Context/TryOnContextProvider";
 import TryOnPopup from "../TryOnPopup/TryOnPopup";
 import star_icon from "../Assets/star_icon.png";
 import star_dull_icon from "../Assets/star_dull_icon.png";
+import axios from "axios";
 
 const ProductDisplay = (props) => {
   const { product } = props;
   const { addToCart } = useContext(ShopContext);
-  const { tryOnImages, isTryOnActive, userImage, uploadUserImages } = useContext(TryOnContext);
+  const {
+    tryOnImages,
+    isTryOnActive,
+    userImage,
+    uploadUserImages,
+    uploadClothImage,
+  } = useContext(TryOnContext);
   const [showPopup, setShowPopup] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   return (
     <div className="productdisplay">
       <div className="productdisplay-left">
+        <div className="productdisplay-img">
+          {isTryOnActive && tryOnImages.length > 0 ? (
+            <img
+              className="productdisplay-main-img"
+              src={tryOnImages[selectedImageIndex]}
+              alt={`try-on-${selectedImageIndex}`}
+            />
+          ) : (
+            <img
+              className="productdisplay-main-img"
+              src={product.image}
+              alt="Default"
+            />
+          )}
+        </div>
+
         <div className="productdisplay-img-list">
           {isTryOnActive ? (
-            userImage ? (
-              <img src={userImage} alt="User Try-On" />
+            tryOnImages.length > 0 ? (
+              tryOnImages.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  alt={`try-on-${index}`}
+                  onClick={() => setSelectedImageIndex(index)}
+                  style={{
+                    cursor: "pointer",
+                    border:
+                      selectedImageIndex === index
+                        ? "2px solid black"
+                        : "1px solid gray",
+                    borderRadius: "4px",
+                    margin: "4px",
+                    width: "80px",
+                    height: "100px",
+                    objectFit: "cover",
+                  }}
+                />
+              ))
             ) : (
-              tryOnImages.map((img, index) => <img key={index} src={img} alt={`try-on-${index}`} />)
+              <p>Loading...</p>
             )
           ) : (
             <>
@@ -31,26 +74,11 @@ const ProductDisplay = (props) => {
             </>
           )}
         </div>
-        <div className="productdisplay-img">
-          {isTryOnActive ? (
-            userImage ? (
-              <img className="productdisplay-main-img" src={userImage} alt="User Try-On" />
-            ) : (
-              tryOnImages.length > 0 ? (
-                <img className="productdisplay-main-img" src={tryOnImages[0]} alt="Try On" />
-              ) : (
-                <img className="productdisplay-main-img" src={product.image} alt="" />
-              )
-            )
-          ) : (
-            <img className="productdisplay-main-img" src={product.image} alt="" />
-          )}
-        </div>
       </div>
+
       <div className="productdisplay-right">
         <h1>{product.name}</h1>
         <div className="productdisplay-right-stars">
-          {/* Star icons remain unchanged */}
           <img src={star_icon} alt="star" />
           <img src={star_icon} alt="star" />
           <img src={star_icon} alt="star" />
@@ -59,11 +87,17 @@ const ProductDisplay = (props) => {
           <p>(100)</p>
         </div>
         <div className="productdisplay-right-prices">
-          <div className="productdisplay-right-price-old">Rs {product.old_price}</div>
-          <div className="productdisplay-right-price-new">Rs {product.new_price}</div>
+          <div className="productdisplay-right-price-old">
+            Rs {product.old_price}
+          </div>
+          <div className="productdisplay-right-price-new">
+            Rs {product.new_price}
+          </div>
         </div>
         <div className="productdisplay-right-description">
-          Stylish and comfortable clothing for every occasion, crafted with premium fabrics to ensure a perfect blend of fashion and functionality.
+          Stylish and comfortable clothing for every occasion, crafted with
+          premium fabrics to ensure a perfect blend of fashion and
+          functionality.
         </div>
         <div className="productdisplay-right-size">
           <h1>Select Size</h1>
@@ -79,7 +113,13 @@ const ProductDisplay = (props) => {
         <button onClick={() => setShowPopup(true)} className="tryon-button">
           TRY ON
         </button>
-        {showPopup && <TryOnPopup onClose={() => setShowPopup(false)} onUpload={uploadUserImages} />}
+        {showPopup && (
+          <TryOnPopup
+            onClose={() => setShowPopup(false)}
+            // onUploadCloth={uploadClothImage}
+            onUploadPerson={uploadUserImages}
+          />
+        )}
         <p className="productdisplay-right-category">
           <span>Category : </span>Women, T-Shirt, Crop Top
         </p>
