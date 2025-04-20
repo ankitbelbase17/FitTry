@@ -26,7 +26,7 @@ const TryOnContextProvider = (props) => {
   
   const toggleTryOn = async () => {
     if (triggerLockRef.current) {
-      console.warn("⏳ Already generating. Skipping duplicate call.");
+      console.warn("Already generating. Skipping duplicate call.");
       return;
     }
   
@@ -37,20 +37,20 @@ const TryOnContextProvider = (props) => {
     }
   
     if (userImages.length < 1 || !clothImage) {
-      console.warn("❗ Need at least 1 user image and a cloth image.");
+      console.warn("Need at least 1 user image and a cloth image.");
       return;
     }
   
-    triggerLockRef.current = true; // ⛔ Lock
+    triggerLockRef.current = true; // Lock
   
     try {
-      console.log("📤 Sending to server:", {
+      console.log("Sending to server:", {
         person_urls: userImages,
         cloth_url: clothImage,
       });
   
       const response = await axios.post(
-        "https://7b50-35-225-9-126.ngrok-free.app/generate",
+        "https://61ef-34-46-82-1.ngrok-free.app/generate",
         {
           person_urls: userImages,
           cloth_url: clothImage,
@@ -63,14 +63,14 @@ const TryOnContextProvider = (props) => {
       );
   
       const resultUrls = response.data.urls;
-      console.log("✅ Received Try-On Results:", resultUrls);
+      console.log("Received Try-On Results:", resultUrls);
   
       setTryOnImages(resultUrls);
       setIsTryOnActive(true);
     } catch (error) {
-      console.error("❌ Error generating try-on results:", error);
+      console.error("Error generating try-on results:", error);
     } finally {
-      triggerLockRef.current = false; // ✅ Release lock
+      triggerLockRef.current = false; // Release lock
     }
   };
   
@@ -85,11 +85,11 @@ const TryOnContextProvider = (props) => {
 
   // optional: auto-trigger once you have 5 + cloth
   useEffect(() => {
-    console.log("👀 useEffect fired");
-    console.log("🧍‍♂️ userImages.length:", userImages.length);
-    console.log("👕 clothImage:", clothImage);
-    console.log("🔁 isTryOnActive:", isTryOnActive);
-    console.log("🔒 triggerLockRef.current:", triggerLockRef.current);
+    console.log("useEffect fired");
+    console.log("userImages.length:", userImages.length);
+    console.log("clothImage:", clothImage);
+    console.log("isTryOnActive:", isTryOnActive);
+    console.log("triggerLockRef.current:", triggerLockRef.current);
   
     if (
       userImages.length >= 1 &&
@@ -97,7 +97,7 @@ const TryOnContextProvider = (props) => {
       !isTryOnActive &&
       !triggerLockRef.current
     ) {
-      console.log("🟢 Triggering TryOn from useEffect...");
+      console.log("Triggering TryOn from useEffect...");
       toggleTryOn();
     }
   }, [userImages, clothImage, isTryOnActive]);

@@ -13,12 +13,36 @@ const ProductDisplay = (props) => {
   const {
     tryOnImages,
     isTryOnActive,
-    userImage,
     uploadUserImages,
-    uploadClothImage,
+    toggleTryOn,
   } = useContext(TryOnContext);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // Handler for default try-on using saved profile images
+  const handleTryOnDefault = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:5000/api/user/profile",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const defaultImages = response.data.profileImages;
+      if (!defaultImages || defaultImages.length === 0) {
+        alert("No default images found. Please upload images first.");
+        return;
+      }
+
+      // Set user images in context
+      uploadUserImages(defaultImages);
+      // Activate try-on display
+      toggleTryOn();
+    } catch (err) {
+      console.error("Default try-on failed:", err);
+      alert("Unable to perform default try-on. Please try again later.");
+    }
+  };
 
   return (
     <div className="productdisplay">
@@ -66,7 +90,7 @@ const ProductDisplay = (props) => {
               <p>Loading...</p>
             )
           ) : (
-            <>
+            <>  
               <img src={product.image} alt="" />
               <img src={product.image} alt="" />
               <img src={product.image} alt="" />
@@ -95,8 +119,8 @@ const ProductDisplay = (props) => {
           </div>
         </div>
         <div className="productdisplay-right-description">
-          Stylish and comfortable clothing for every occasion, crafted with
-          premium fabrics to ensure a perfect blend of fashion and
+          Stylish and comfortable clothing for every occasion, crafted
+          with premium fabrics to ensure a perfect blend of fashion and
           functionality.
         </div>
         <div className="productdisplay-right-size">
@@ -109,17 +133,29 @@ const ProductDisplay = (props) => {
             <div>XXL</div>
           </div>
         </div>
-        <button onClick={() => addToCart(product.id)}>ADD TO CART</button>
-        <button onClick={() => setShowPopup(true)} className="tryon-button">
-          TRY ON
-        </button>
+
+        {/* Buttons: Add to Cart, Try On (upload flow), Try On Default (preset flow) */}
+        <div style={{ display: "flex", gap: "16px", marginBottom: "40px" }}>
+          <button onClick={() => addToCart(product.id)}>ADD TO CART</button>
+
+          {/* Open upload popup for custom try-on */}
+          <button onClick={() => setShowPopup(true)} className="tryon-button">
+            TRY ON
+          </button>
+
+          {/* Fetch & use default profile images for try-on */}
+          <button onClick={handleTryOnDefault} className="tryon-button">
+            TRY ON DEFAULT
+          </button>
+        </div>
+
         {showPopup && (
           <TryOnPopup
             onClose={() => setShowPopup(false)}
-            // onUploadCloth={uploadClothImage}
             onUploadPerson={uploadUserImages}
           />
         )}
+
         <p className="productdisplay-right-category">
           <span>Category : </span>Women, T-Shirt, Crop Top
         </p>

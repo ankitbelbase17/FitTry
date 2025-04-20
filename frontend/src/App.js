@@ -1,5 +1,8 @@
 import './App.css';
 import Navbar from './Components/Navbar/Navbar';
+import ProfilePage from './Pages/ProfilePage';
+import ProfileImagesPage from './Pages/ProfileImagesPage';
+import Settings from './Pages/Settings';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Shop from './Pages/Shop';
 import ShopCategory from './Pages/ShopCategory';
@@ -51,6 +54,9 @@ function App() {
               <Route path="/kids" element={<ShopCategory banner={kid_banner} category="kid" />} />
               <Route path="/product/:productId" element={<Product />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/profile/images" element={<ProfileImagesPage />} />
+              <Route path="/settings" element={<Settings />} />
             </>
           ) : (
             <>

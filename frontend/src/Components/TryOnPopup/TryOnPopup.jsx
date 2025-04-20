@@ -52,14 +52,14 @@ const TryOnPopup = ({ onClose,  onUploadPerson }) => {
       }
 
       await onUploadPerson(personUrls);
-      console.log("📦 Uploads complete — waiting for auto-trigger...");
+      console.log("Uploads complete — waiting for auto-trigger...");
       
       
-      // console.log("✅ Uploaded cloth URL:", clothUrl);
-      console.log("✅ Uploaded person URLs:", personUrls);
+      // console.log("Uploaded cloth URL:", clothUrl);
+      console.log("Uploaded person URLs:", personUrls);
     } catch (error) {
       const msg = error.response?.data?.error?.message || error.message;
-  console.error("❌ Upload failed:", msg);
+  console.error("Upload failed:", msg);
   alert("Upload failed: " + msg);
     }
   };
